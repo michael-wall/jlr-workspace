@@ -48,21 +48,24 @@ public class DocumentsPortletFilter implements RenderFilter{
 		textCleansed = textCleansed.replaceAll("\\r", "");
 
 		//The JSP is used by both DLPortlet and DLAdminPortlet meaning there is 2 form tag variations...
+		// DLPortlet is instanceable, DPAdminPortlet is not instanceable...
+		//_com_liferay_document_library_web_portlet_DLAdminPortlet_fm2
+		//_com_liferay_document_library_web_portlet_DLPortlet_INSTANCE_fBUtTsYH6D0D_fm2
 		
-		boolean formMatches = textCleansed.matches(".*(<form action).*(id=\"_com_liferay_document_library_web_portlet_DL(Admin)?Portlet_fm2\" method=\"post\" name=\"_com_liferay_document_library_web_portlet_DL(Admin)?Portlet_fm2\"\\s>).*(</form>).*");
+		boolean formMatches = textCleansed.matches(".*(<form action).*(id=\"_com_liferay_document_library_web_portlet_DL(Admin)?Portlet(_INSTANCE_[a-zA-Z0-9]{12})?_fm2\" method=\"post\" name=\"_com_liferay_document_library_web_portlet_DL(Admin)?Portlet(_INSTANCE_[a-zA-Z0-9]{12})?_fm2\"\\s>).*(</form>).*");
 
 		if (_log.isDebugEnabled()) {
 			_log.debug("formMatches: " + formMatches);	
 		}
 
-		boolean formButtonMatches = textCleansed.matches(".*(<form action).*(id=\"_com_liferay_document_library_web_portlet_DL(Admin)?Portlet_fm2\" method=\"post\" name=\"_com_liferay_document_library_web_portlet_DL(Admin)?Portlet_fm2\"\\s>).*(<button).*(id=\"_com_liferay_document_library_web_portlet_DL(Admin)?Portlet_)[a-z]{4}(\").*(type=\"submit\").*(>).*(</button>).*(</form>).*");
+		boolean formButtonMatches = textCleansed.matches(".*(<form action).*(id=\"_com_liferay_document_library_web_portlet_DL(Admin)?Portlet(_INSTANCE_[a-zA-Z0-9]{12})?_fm2\" method=\"post\" name=\"_com_liferay_document_library_web_portlet_DL(Admin)?Portlet(_INSTANCE_[a-zA-Z0-9]{12})?_fm2\"\\s>).*(<button).*(id=\"_com_liferay_document_library_web_portlet_DL(Admin)?Portlet(_INSTANCE_[a-zA-Z0-9]{12})?_)[a-z]{4}(\").*(type=\"submit\").*(>).*(</button>).*(</form>).*");
 
 		if (_log.isDebugEnabled()) {
 			_log.debug("formButtonMatches: " + formButtonMatches);	
 		}
 
 		if (formMatches && formButtonMatches) {
-			Pattern buttonHtmlPattern = Pattern.compile("(<button).*(id=\"_com_liferay_document_library_web_portlet_DL(Admin)?Portlet_)[a-z]{4}(\").*(type=\"submit\").*(>).*(</button>)", Pattern.DOTALL);
+			Pattern buttonHtmlPattern = Pattern.compile("(<button).*(id=\"_com_liferay_document_library_web_portlet_DL(Admin)?Portlet(_INSTANCE_[a-zA-Z0-9]{12})?_)[a-z]{4}(\").*(type=\"submit\").*(>).*(</button>)", Pattern.DOTALL);
 		    Matcher buttonHtmlMatcher = buttonHtmlPattern.matcher(text);
 		    boolean buttonHtmlMatchFound = buttonHtmlMatcher.find();
 		    
